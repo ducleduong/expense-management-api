@@ -7,6 +7,7 @@ import { CreateExpenseDto } from './dto/create-expense.dto';
 import { PrismaClient } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 import { Expense } from './entities/expense.entity';
+import { GetExpensesDto } from './dto/get-expenses.dto';
 
 @Injectable()
 export class ExpenseService {
@@ -24,9 +25,12 @@ export class ExpenseService {
     }
   }
 
-  async findAll() {
+  async findAll(query: GetExpensesDto) {
     try {
       const expenses = await this.prismaService.expense.findMany({
+        where: {
+          type: query.type,
+        },
         orderBy: {
           createdAt: 'desc',
         },
